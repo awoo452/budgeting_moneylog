@@ -5,7 +5,35 @@ class TransactionsController < ApplicationController
   before_action :set_transaction, only: %i[show edit update destroy]
 
   def index
-    @transactions = Transaction.includes(:account, :category).order(occurred_on: :desc, created_at: :desc)
+    @accounts = Account.order(:name)
+    @categories = Category.order(:name)
+    @transactions = Transaction.includes(:account, :category)
+    @query = params[:query].to_s.strip
+
+    if @query.present?
+      escaped = Transaction.sanitize_sql_like(@query)
+      match = "%#{escaped}%"
+      @transactions = @transactions.where(
+        "description ILIKE ? OR notes ILIKE ? OR payment_method ILIKE ?",
+        match,
+        match,
+        match
+      )
+    end
+
+    if params[:sort] == "amount_desc"
+      @transactions = @transactions.order(Arel.sql("ABS(amount) DESC"), occurred_on: :desc, created_at: :desc)
+    else
+      @transactions = @transactions.order(occurred_on: :desc, created_at: :desc)
+    end
+
+    if params[:account_id].present?
+      @transactions = @transactions.where(account_id: params[:account_id])
+    end
+
+    if params[:category_id].present?
+      @transactions = @transactions.where(category_id: params[:category_id])
+    end
   end
 
   def show

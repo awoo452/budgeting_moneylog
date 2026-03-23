@@ -15,16 +15,18 @@ class DashboardController < ApplicationController
     @expense_by_category = scope
       .joins(:category)
       .where("amount < 0")
-      .group("categories.name")
+      .group("categories.id", "categories.name")
       .sum(Arel.sql("ABS(amount)"))
-      .sort_by { |_, total| -total }
+      .map { |(id, name), total| { id: id, name: name, total: total } }
+      .sort_by { |row| -row[:total] }
 
     @income_by_category = scope
       .joins(:category)
       .where("amount > 0")
-      .group("categories.name")
+      .group("categories.id", "categories.name")
       .sum(:amount)
-      .sort_by { |_, total| -total }
+      .map { |(id, name), total| { id: id, name: name, total: total } }
+      .sort_by { |row| -row[:total] }
   end
 
   private

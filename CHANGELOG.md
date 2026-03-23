@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.2] - 2026-03-23
+### Added
+- Added basic transaction filters for account and category.
+- Added sorting by amount (largest first) on the transactions page.
+- Added dashboard links to jump from a category total to its transactions.
+- Added a basic transaction search field on the transactions page.
+
 ## [0.0.1] - 2026-03-23
 ### Added
 - Initial budgeting/moneylog template with CRUD for accounts, categories, transactions, and budgets.

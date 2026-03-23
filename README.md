@@ -7,9 +7,10 @@ This repo is a basic budgeting template with CRUD flows for accounts, categories
 - Accounts for banks, cash, and credit balances.
 - Categories for income and expense tracking.
 - Transactions with dates, amounts, accounts, and categories.
+- Transaction filters for account/category, basic search, and amount sorting.
 - CSV import for transactions (date, description, debit, credit) with account selection.
 - Budgets for monthly category targets.
-- Dashboard with basic income/expense summaries and category totals.
+- Dashboard with basic income/expense summaries and category totals (click a category to see its transactions).
 
 ## Core Schema
 
@@ -58,6 +59,10 @@ Optional fields:
 ## CSV Import
 
 Upload a CSV from `Transactions -> Import CSV`. Files may include headers for `date`, `description`, `debit`, and `credit` or the alternate format `date`, `id`, `amount`, and `description`. If headers are missing, the importer assumes column order of `date`, `description` (optional), `debit`, and `credit`. Debit amounts import as negatives, credits as positives. Transactions are categorized as `Uncategorized Income` or `Uncategorized Expense` based on the sign.
+
+## Transactions Search
+
+The transactions index supports basic search across `description`, `notes`, and `payment_method`, alongside account/category filters and amount sorting.
 
 ## Setup
 

@@ -2,6 +2,33 @@
 
 <h1>Transactions</h1>
 
+<%= form_with url: transactions_path, method: :get do |form| %>
+  <div>
+    <%= form.label :account_id, "Account" %><br>
+    <%= form.collection_select :account_id, @accounts, :id, :name, include_blank: "All", selected: params[:account_id] %>
+  </div>
+
+  <div>
+    <%= form.label :category_id, "Category" %><br>
+    <%= form.collection_select :category_id, @categories, :id, :name, include_blank: "All", selected: params[:category_id] %>
+  </div>
+
+  <div>
+    <%= form.label :query, "Search" %><br>
+    <%= form.search_field :query, value: @query, placeholder: "Description, notes, or payment method" %>
+  </div>
+
+  <div>
+    <%= form.label :sort, "Sort" %><br>
+    <%= form.select :sort, options_for_select([["Date (newest first)", ""], ["Amount (largest first)", "amount_desc"]], params[:sort]) %>
+  </div>
+
+  <div>
+    <%= form.submit "Filter" %>
+    <%= link_to "Clear", transactions_path %>
+  </div>
+<% end %>
+
 <p>
   <%= link_to "New transaction", new_transaction_path %>
   |

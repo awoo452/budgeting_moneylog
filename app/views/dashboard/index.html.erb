@@ -38,10 +38,10 @@
     </tr>
   </thead>
   <tbody>
-    <% @expense_by_category.each do |category, total| %>
+    <% @expense_by_category.each do |category| %>
       <tr>
-        <td><%= category %></td>
-        <td><%= number_to_currency(total) %></td>
+        <td><%= link_to category[:name], transactions_path(category_id: category[:id]) %></td>
+        <td><%= number_to_currency(category[:total]) %></td>
       </tr>
     <% end %>
   </tbody>
@@ -57,10 +57,10 @@
     </tr>
   </thead>
   <tbody>
-    <% @income_by_category.each do |category, total| %>
+    <% @income_by_category.each do |category| %>
       <tr>
-        <td><%= category %></td>
-        <td><%= number_to_currency(total) %></td>
+        <td><%= link_to category[:name], transactions_path(category_id: category[:id]) %></td>
+        <td><%= number_to_currency(category[:total]) %></td>
       </tr>
     <% end %>
   </tbody>
