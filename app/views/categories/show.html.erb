@@ -1,0 +1,30 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Category</h1>
+
+<p>
+  <strong>Name:</strong>
+  <%= @category.name %>
+</p>
+
+<p>
+  <strong>Kind:</strong>
+  <%= @category.kind.humanize %>
+</p>
+
+<p>
+  <strong>Archived:</strong>
+  <%= @category.archived ? "Yes" : "No" %>
+</p>
+
+<p>
+  <strong>Notes:</strong>
+  <%= @category.notes %>
+</p>
+
+<p>
+  <%= link_to "Edit", edit_category_path(@category) %> |
+  <%= link_to "Back", categories_path %>
+</p>
+
+<%= button_to "Delete", @category, method: :delete, data: { turbo_confirm: "Are you sure?" } %>

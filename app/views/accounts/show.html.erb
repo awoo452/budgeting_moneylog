@@ -1,0 +1,45 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Account</h1>
+
+<p>
+  <strong>Name:</strong>
+  <%= @account.name %>
+</p>
+
+<p>
+  <strong>Institution:</strong>
+  <%= @account.institution %>
+</p>
+
+<p>
+  <strong>Account type:</strong>
+  <%= @account.account_type&.humanize %>
+</p>
+
+<p>
+  <strong>Currency:</strong>
+  <%= @account.currency %>
+</p>
+
+<p>
+  <strong>Opening balance:</strong>
+  <%= number_to_currency(@account.opening_balance) %>
+</p>
+
+<p>
+  <strong>Opened on:</strong>
+  <%= @account.opened_on %>
+</p>
+
+<p>
+  <strong>Notes:</strong>
+  <%= @account.notes %>
+</p>
+
+<p>
+  <%= link_to "Edit", edit_account_path(@account) %> |
+  <%= link_to "Back", accounts_path %>
+</p>
+
+<%= button_to "Delete", @account, method: :delete, data: { turbo_confirm: "Are you sure?" } %>

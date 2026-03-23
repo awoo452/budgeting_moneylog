@@ -1,0 +1,51 @@
+<%= form_with(model: transaction) do |form| %>
+  <% if transaction.errors.any? %>
+    <div>
+      <h2><%= pluralize(transaction.errors.count, "error") %> prohibited this transaction from being saved:</h2>
+      <ul>
+        <% transaction.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :account_id, "Account" %><br>
+    <%= form.collection_select :account_id, Account.order(:name), :id, :name, prompt: "Select account" %>
+  </div>
+
+  <div>
+    <%= form.label :category_id, "Category" %><br>
+    <%= form.collection_select :category_id, Category.order(:name), :id, :name, prompt: "Select category" %>
+  </div>
+
+  <div>
+    <%= form.label :occurred_on, "Date" %><br>
+    <%= form.date_field :occurred_on %>
+  </div>
+
+  <div>
+    <%= form.label :amount %><br>
+    <%= form.number_field :amount, step: "0.01" %>
+  </div>
+
+  <div>
+    <%= form.label :description %><br>
+    <%= form.text_field :description %>
+  </div>
+
+  <div>
+    <%= form.label :payment_method %><br>
+    <%= form.text_field :payment_method %>
+  </div>
+
+  <div>
+    <%= form.label :notes %><br>
+    <%= form.text_area :notes, rows: 4 %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

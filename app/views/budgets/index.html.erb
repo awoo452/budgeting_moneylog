@@ -1,0 +1,28 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Budgets</h1>
+
+<p>
+  <%= link_to "New budget", new_budget_path %>
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Month</th>
+      <th>Category</th>
+      <th>Amount</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @budgets.each do |budget| %>
+      <tr>
+        <td><%= budget.month %></td>
+        <td><%= budget.category&.name %></td>
+        <td><%= number_to_currency(budget.amount) %></td>
+        <td><%= link_to "Show", budget %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

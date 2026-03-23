@@ -1,0 +1,67 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Dashboard</h1>
+
+<%= form_with url: dashboard_path, method: :get do |form| %>
+  <div>
+    <%= form.label :start_date, "Start date" %><br>
+    <%= form.date_field :start_date, value: params[:start_date] %>
+  </div>
+
+  <div>
+    <%= form.label :end_date, "End date" %><br>
+    <%= form.date_field :end_date, value: params[:end_date] %>
+  </div>
+
+  <div>
+    <%= form.submit "Apply" %>
+    <%= link_to "Clear", dashboard_path %>
+  </div>
+<% end %>
+
+<h2>Summary</h2>
+
+<ul>
+  <li><strong>Transactions:</strong> <%= @transaction_count %></li>
+  <li><strong>Total income:</strong> <%= number_to_currency(@income_total) %></li>
+  <li><strong>Total expenses:</strong> <%= number_to_currency(@expense_total) %></li>
+  <li><strong>Net:</strong> <%= number_to_currency(@net_total) %></li>
+</ul>
+
+<h2>Expenses by category</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @expense_by_category.each do |category, total| %>
+      <tr>
+        <td><%= category %></td>
+        <td><%= number_to_currency(total) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h2>Income by category</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @income_by_category.each do |category, total| %>
+      <tr>
+        <td><%= category %></td>
+        <td><%= number_to_currency(total) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

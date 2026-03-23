@@ -1,0 +1,36 @@
+<%= form_with(model: category) do |form| %>
+  <% if category.errors.any? %>
+    <div>
+      <h2><%= pluralize(category.errors.count, "error") %> prohibited this category from being saved:</h2>
+      <ul>
+        <% category.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name %><br>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :kind %><br>
+    <%= form.select :kind, Category::KINDS.map { |value| [value.humanize, value] } %>
+  </div>
+
+  <div>
+    <%= form.label :archived %><br>
+    <%= form.check_box :archived %>
+  </div>
+
+  <div>
+    <%= form.label :notes %><br>
+    <%= form.text_area :notes, rows: 4 %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

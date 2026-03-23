@@ -1,0 +1,28 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Categories</h1>
+
+<p>
+  <%= link_to "New category", new_category_path %>
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Kind</th>
+      <th>Archived</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @categories.each do |category| %>
+      <tr>
+        <td><%= category.name %></td>
+        <td><%= category.kind.humanize %></td>
+        <td><%= category.archived ? "Yes" : "No" %></td>
+        <td><%= link_to "Show", category %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

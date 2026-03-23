@@ -1,0 +1,51 @@
+<%= form_with(model: account) do |form| %>
+  <% if account.errors.any? %>
+    <div>
+      <h2><%= pluralize(account.errors.count, "error") %> prohibited this account from being saved:</h2>
+      <ul>
+        <% account.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name %><br>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :institution %><br>
+    <%= form.text_field :institution %>
+  </div>
+
+  <div>
+    <%= form.label :account_type %><br>
+    <%= form.select :account_type, Account::TYPES.map { |value| [value.humanize, value] }, include_blank: true %>
+  </div>
+
+  <div>
+    <%= form.label :currency %><br>
+    <%= form.text_field :currency %>
+  </div>
+
+  <div>
+    <%= form.label :opening_balance %><br>
+    <%= form.number_field :opening_balance, step: "0.01" %>
+  </div>
+
+  <div>
+    <%= form.label :opened_on %><br>
+    <%= form.date_field :opened_on %>
+  </div>
+
+  <div>
+    <%= form.label :notes %><br>
+    <%= form.text_area :notes, rows: 4 %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
