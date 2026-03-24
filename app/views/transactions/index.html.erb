@@ -2,16 +2,16 @@
 
 <h1>Transactions</h1>
 
-<% base_params = params.permit(:account_id, :category_id, :query, :sort) %>
+<% base_params = @base_params || {} %>
 <p>
   Quick filters:
-  <%= link_to "All", transactions_path(base_params.except(:kind)) %>
+  <%= link_to "All", transactions_path(base_params.except("kind")) %>
   |
-  <%= link_to "Expenses", transactions_path(base_params.except(:category_id).merge(kind: "expense")) %>
+  <%= link_to "Expenses", transactions_path(base_params.except("category_id").merge(kind: "expense")) %>
   |
-  <%= link_to "Income", transactions_path(base_params.except(:category_id).merge(kind: "income")) %>
+  <%= link_to "Income", transactions_path(base_params.except("category_id").merge(kind: "income")) %>
   |
-  <%= link_to "Transfers", transactions_path(base_params.except(:category_id).merge(kind: "transfer")) %>
+  <%= link_to "Transfers", transactions_path(base_params.except("category_id").merge(kind: "transfer")) %>
 </p>
 
 <%= form_with url: transactions_path, method: :get do |form| %>
@@ -27,7 +27,7 @@
 
   <div>
     <%= form.label :kind, "Type" %><br>
-    <%= form.select :kind, options_for_select([["All", ""], ["Expenses", "expense"], ["Income", "income"], ["Transfers", "transfer"]], @kind) %>
+    <%= form.select :kind, options_for_select([ [ "All", "" ], [ "Expenses", "expense" ], [ "Income", "income" ], [ "Transfers", "transfer" ] ], @kind) %>
   </div>
 
   <div>
@@ -37,7 +37,7 @@
 
   <div>
     <%= form.label :sort, "Sort" %><br>
-    <%= form.select :sort, options_for_select([["Date (newest first)", ""], ["Amount (largest first)", "amount_desc"]], params[:sort]) %>
+    <%= form.select :sort, options_for_select([ [ "Date (newest first)", "" ], [ "Amount (largest first)", "amount_desc" ] ], params[:sort]) %>
   </div>
 
   <div>

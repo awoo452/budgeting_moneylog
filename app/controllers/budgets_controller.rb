@@ -103,7 +103,7 @@ class BudgetsController < ApplicationController
 
     categories = Category.where(kind: "expense").order(:name)
     categories.map do |category|
-      total = sums.fetch([category.id, category.name], 0)
+      total = sums.fetch([ category.id, category.name ], 0)
       average = (total / window_months.to_f).round(2)
       { category_id: category.id, category_name: category.name, amount: average }
     end

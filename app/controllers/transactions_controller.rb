@@ -11,6 +11,7 @@ class TransactionsController < ApplicationController
     @query = params[:query].to_s.strip
     @kind = params[:kind].to_s.strip
     @category_id = params[:category_id].presence
+    @base_params = params.permit(:account_id, :category_id, :query, :sort, :kind).to_h
 
     if @query.present?
       escaped = Transaction.sanitize_sql_like(@query)
