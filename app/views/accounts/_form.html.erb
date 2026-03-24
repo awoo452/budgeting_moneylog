@@ -36,6 +36,11 @@
   </div>
 
   <div>
+    <%= form.label :current_balance %><br>
+    <%= form.number_field :current_balance, step: "0.01" %>
+  </div>
+
+  <div>
     <%= form.label :opened_on %><br>
     <%= form.date_field :opened_on %>
   </div>

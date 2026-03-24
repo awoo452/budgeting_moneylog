@@ -19,7 +19,11 @@ Rails.application.routes.draw do
       post :import, action: :import_create
     end
   end
-  resources :budgets
+  resources :budgets do
+    collection do
+      post :generate
+    end
+  end
 
   # Defines the root path route ("/")
   root "dashboard#index"

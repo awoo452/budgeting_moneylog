@@ -28,6 +28,11 @@
 </p>
 
 <p>
+  <strong>Current balance:</strong>
+  <%= number_to_currency(@account.current_balance) %>
+</p>
+
+<p>
   <strong>Opened on:</strong>
   <%= @account.opened_on %>
 </p>

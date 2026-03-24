@@ -9,6 +9,8 @@ class TransactionsController < ApplicationController
     @categories = Category.order(:name)
     @transactions = Transaction.includes(:account, :category)
     @query = params[:query].to_s.strip
+    @kind = params[:kind].to_s.strip
+    @category_id = params[:category_id].presence
 
     if @query.present?
       escaped = Transaction.sanitize_sql_like(@query)
@@ -21,6 +23,14 @@ class TransactionsController < ApplicationController
       )
     end
 
+    if @kind.present? && %w[income expense transfer].include?(@kind)
+      @transactions = @transactions.joins(:category).where(categories: { kind: @kind })
+      @categories = @categories.where(kind: @kind)
+      unless @category_id && @categories.where(id: @category_id).exists?
+        @category_id = nil
+      end
+    end
+
     if params[:sort] == "amount_desc"
       @transactions = @transactions.order(Arel.sql("ABS(amount) DESC"), occurred_on: :desc, created_at: :desc)
     else
@@ -31,8 +41,8 @@ class TransactionsController < ApplicationController
       @transactions = @transactions.where(account_id: params[:account_id])
     end
 
-    if params[:category_id].present?
-      @transactions = @transactions.where(category_id: params[:category_id])
+    if @category_id.present?
+      @transactions = @transactions.where(category_id: @category_id)
     end
   end
 

@@ -60,6 +60,20 @@ Optional fields:
 
 Upload a CSV from `Transactions -> Import CSV`. Files may include headers for `date`, `description`, `debit`, and `credit` or the alternate format `date`, `id`, `amount`, and `description`. If headers are missing, the importer assumes column order of `date`, `description` (optional), `debit`, and `credit`. Debit amounts import as negatives, credits as positives. Transactions are categorized as `Uncategorized Income` or `Uncategorized Expense` based on the sign.
 
+## Statement Text Import
+
+If you only have a copied statement (no CSV), paste it into a text file and run the importer:
+
+```bash
+bin/rails runner script/import_statement_text.rb /path/to/statement.txt ACCOUNT_ID
+```
+
+Options:
+- `--year=2025` to override the year (default uses the most recent reasonable year).
+- `--use-post-date` to use the first date column instead of the transaction date.
+- `--no-invert` if your amounts already use negative for expenses.
+- `--dedupe` to skip statement rows that already exist (based on reference when available).
+
 ## Transactions Search
 
 The transactions index supports basic search across `description`, `notes`, and `payment_method`, alongside account/category filters and amount sorting.

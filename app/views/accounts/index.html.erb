@@ -14,6 +14,7 @@
       <th>Type</th>
       <th>Currency</th>
       <th>Opening balance</th>
+      <th>Current balance</th>
       <th></th>
     </tr>
   </thead>
@@ -25,6 +26,7 @@
         <td><%= account.account_type&.humanize %></td>
         <td><%= account.currency %></td>
         <td><%= number_to_currency(account.opening_balance) %></td>
+        <td><%= number_to_currency(account.current_balance) %></td>
         <td><%= link_to "Show", account %></td>
       </tr>
     <% end %>

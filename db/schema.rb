@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_23_120300) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_23_180000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -18,6 +18,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_23_120300) do
     t.string "account_type"
     t.datetime "created_at", null: false
     t.string "currency", default: "USD", null: false
+    t.decimal "current_balance", precision: 12, scale: 2, default: "0.0", null: false
     t.string "institution"
     t.string "name", null: false
     t.text "notes"

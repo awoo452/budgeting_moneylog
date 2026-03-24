@@ -8,20 +8,22 @@ class DashboardController < ApplicationController
     scope = scope.where("occurred_on <= ?", @end_date) if @end_date
 
     @transaction_count = scope.count
-    @income_total = scope.where("amount > 0").sum(:amount)
-    @expense_total = scope.where("amount < 0").sum(Arel.sql("ABS(amount)"))
+
+    expense_scope = scope.joins(:category).where(categories: { kind: "expense" })
+    income_scope = scope.joins(:category).where(categories: { kind: "income" })
+
+    @income_total = income_scope.where("amount > 0").sum(:amount)
+    @expense_total = expense_scope.where("amount < 0").sum(Arel.sql("ABS(amount)"))
     @net_total = @income_total - @expense_total
 
-    @expense_by_category = scope
-      .joins(:category)
+    @expense_by_category = expense_scope
       .where("amount < 0")
       .group("categories.id", "categories.name")
       .sum(Arel.sql("ABS(amount)"))
       .map { |(id, name), total| { id: id, name: name, total: total } }
       .sort_by { |row| -row[:total] }
 
-    @income_by_category = scope
-      .joins(:category)
+    @income_by_category = income_scope
       .where("amount > 0")
       .group("categories.id", "categories.name")
       .sum(:amount)

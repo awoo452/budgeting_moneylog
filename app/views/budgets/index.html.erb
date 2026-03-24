@@ -2,6 +2,17 @@
 
 <h1>Budgets</h1>
 
+<%= form_with url: budgets_path, method: :get do |form| %>
+  <div>
+    <%= form.label :month, "Month" %><br>
+    <%= form.month_field :month, value: @month %>
+  </div>
+
+  <div>
+    <%= form.submit "Apply" %>
+  </div>
+<% end %>
+
 <p>
   <%= link_to "New budget", new_budget_path %>
 </p>
@@ -9,19 +20,47 @@
 <table>
   <thead>
     <tr>
-      <th>Month</th>
       <th>Category</th>
-      <th>Amount</th>
+      <th>Budgeted</th>
+      <th>Actual</th>
+      <th>Remaining</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <% @budgets.each do |budget| %>
+      <% actual = @actuals_by_category[budget.category_id] || 0 %>
+      <% remaining = budget.amount - actual %>
       <tr>
-        <td><%= budget.month %></td>
         <td><%= budget.category&.name %></td>
         <td><%= number_to_currency(budget.amount) %></td>
+        <td><%= number_to_currency(actual) %></td>
+        <td><%= number_to_currency(remaining) %></td>
         <td><%= link_to "Show", budget %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h2>Suggested Budgets (Last 3 Months Avg)</h2>
+
+<%= form_with url: generate_budgets_path, method: :post do |form| %>
+  <%= form.hidden_field :month, value: @month %>
+  <%= form.submit "Generate Budgets For This Month" %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Suggested</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @suggested_budgets.each do |suggestion| %>
+      <tr>
+        <td><%= suggestion[:category_name] %></td>
+        <td><%= number_to_currency(suggestion[:amount]) %></td>
       </tr>
     <% end %>
   </tbody>

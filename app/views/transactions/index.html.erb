@@ -2,6 +2,18 @@
 
 <h1>Transactions</h1>
 
+<% base_params = params.permit(:account_id, :category_id, :query, :sort) %>
+<p>
+  Quick filters:
+  <%= link_to "All", transactions_path(base_params.except(:kind)) %>
+  |
+  <%= link_to "Expenses", transactions_path(base_params.except(:category_id).merge(kind: "expense")) %>
+  |
+  <%= link_to "Income", transactions_path(base_params.except(:category_id).merge(kind: "income")) %>
+  |
+  <%= link_to "Transfers", transactions_path(base_params.except(:category_id).merge(kind: "transfer")) %>
+</p>
+
 <%= form_with url: transactions_path, method: :get do |form| %>
   <div>
     <%= form.label :account_id, "Account" %><br>
@@ -10,7 +22,12 @@
 
   <div>
     <%= form.label :category_id, "Category" %><br>
-    <%= form.collection_select :category_id, @categories, :id, :name, include_blank: "All", selected: params[:category_id] %>
+    <%= form.collection_select :category_id, @categories, :id, :name, include_blank: "All", selected: @category_id %>
+  </div>
+
+  <div>
+    <%= form.label :kind, "Type" %><br>
+    <%= form.select :kind, options_for_select([["All", ""], ["Expenses", "expense"], ["Income", "income"], ["Transfers", "transfer"]], @kind) %>
   </div>
 
   <div>
@@ -42,6 +59,7 @@
       <th>Description</th>
       <th>Account</th>
       <th>Category</th>
+      <th>Type</th>
       <th>Amount</th>
       <th></th>
     </tr>
@@ -53,6 +71,7 @@
         <td><%= transaction.description %></td>
         <td><%= transaction.account&.name %></td>
         <td><%= transaction.category&.name %></td>
+        <td><%= transaction.category&.kind&.titleize %></td>
         <td><%= number_to_currency(transaction.amount) %></td>
         <td><%= link_to "Show", transaction %></td>
       </tr>

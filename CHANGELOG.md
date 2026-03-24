@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.3] - 2026-03-23
+### Added
+- Added a statement text importer for pasted card statements.
+- Added support to bypass statement import de-duplication.
+- Added transaction type filtering (income vs expense) with quick links and a type column.
+- Added `current_balance` to accounts for manual balance tracking.
+- Added current balance display on account list and detail pages.
+- Added current balance field to account create/edit form.
+- Added budget planner view with month filter, actuals, and 3-month average suggestions.
+- Added transfer as a category type with filtering on the transactions page.
+### Changed
+- Statement text import now inserts all rows by default (opt-in de-duplication).
+### Fixed
+- Dashboard income/expense totals now use category kind to avoid mixing income into expenses.
+- Transaction type filtering now ignores mismatched categories and limits the category list by type.
+
 ## [0.0.2] - 2026-03-23
 ### Added
 - Added basic transaction filters for account and category.

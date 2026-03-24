@@ -1,5 +1,5 @@
 class Category < ApplicationRecord
-  KINDS = %w[income expense].freeze
+  KINDS = %w[income expense transfer].freeze
 
   has_many :transactions, dependent: :destroy
   has_many :budgets, dependent: :destroy
