@@ -1,0 +1,81 @@
+<%= form_with(model: recurring_bill) do |form| %>
+  <% if recurring_bill.errors.any? %>
+    <div>
+      <h2><%= pluralize(recurring_bill.errors.count, "error") %> prohibited this recurring bill from being saved:</h2>
+      <ul>
+        <% recurring_bill.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name %><br>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :amount %><br>
+    <%= form.number_field :amount, step: "0.01" %>
+  </div>
+
+  <div>
+    <%= form.label :cadence %><br>
+    <%= form.select :cadence, RecurringBill::CADENCES.map { |value| [value.humanize, value] }, include_blank: true %>
+  </div>
+
+  <div>
+    <%= form.label :next_due_on, "Next due date" %><br>
+    <%= form.date_field :next_due_on %>
+  </div>
+
+  <div>
+    <%= form.label :due_day, "Monthly due day" %><br>
+    <%= form.number_field :due_day, step: 1, min: 1, max: 31 %>
+  </div>
+
+  <div>
+    <%= form.label :last_paid_on %><br>
+    <%= form.date_field :last_paid_on %>
+  </div>
+
+  <div>
+    <%= form.label :account_id, "Pay from" %><br>
+    <%= form.collection_select :account_id, Account.order(:name), :id, :name, prompt: "Select account" %>
+  </div>
+
+  <div>
+    <%= form.label :category_id, "Category" %><br>
+    <%= form.collection_select :category_id, Category.where(kind: %w[expense transfer]).order(:name), :id, :name, prompt: "Select category" %>
+  </div>
+
+  <div>
+    <%= form.label :transfer_account_id, "Apply to account (for transfers)" %><br>
+    <%= form.collection_select :transfer_account_id, Account.order(:name), :id, :name, prompt: "Select account" %>
+  </div>
+
+  <div>
+    <%= form.label :autopay %>
+    <%= form.check_box :autopay %>
+  </div>
+
+  <div>
+    <%= form.label :variable_amount, "Variable amount" %>
+    <%= form.check_box :variable_amount %>
+  </div>
+
+  <div>
+    <%= form.label :active %>
+    <%= form.check_box :active %>
+  </div>
+
+  <div>
+    <%= form.label :notes %><br>
+    <%= form.text_area :notes, rows: 4 %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

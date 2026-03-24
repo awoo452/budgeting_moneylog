@@ -1,0 +1,88 @@
+<p><%= notice %></p>
+
+<h1>Recurring bill</h1>
+
+<p>
+  <strong>Name:</strong>
+  <%= @recurring_bill.name %>
+</p>
+
+<p>
+  <strong>Amount:</strong>
+  <%= number_to_currency(@recurring_bill.amount) %>
+</p>
+
+<p>
+  <strong>Cadence:</strong>
+  <%= @recurring_bill.cadence.humanize %>
+</p>
+
+<p>
+  <strong>Next due date:</strong>
+  <%= @recurring_bill.next_due_on %>
+</p>
+
+<p>
+  <strong>Monthly due day:</strong>
+  <%= @recurring_bill.due_day %>
+</p>
+
+<p>
+  <strong>Last paid on:</strong>
+  <%= @recurring_bill.last_paid_on %>
+</p>
+
+<p>
+  <strong>Account:</strong>
+  <%= @recurring_bill.account.name %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @recurring_bill.category.name %>
+</p>
+
+<p>
+  <strong>Apply to account:</strong>
+  <%= @recurring_bill.transfer_account&.name || "-" %>
+</p>
+
+<p>
+  <strong>Autopay:</strong>
+  <%= @recurring_bill.autopay? ? "Yes" : "No" %>
+</p>
+
+<p>
+  <strong>Variable amount:</strong>
+  <%= @recurring_bill.variable_amount? ? "Yes" : "No" %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @recurring_bill.active? ? "Yes" : "No" %>
+</p>
+
+<p>
+  <strong>Notes:</strong>
+  <%= @recurring_bill.notes %>
+</p>
+
+<h2>Apply payment</h2>
+
+<%= form_with url: apply_payment_recurring_bill_path(@recurring_bill), method: :post do |form| %>
+  <div>
+    <%= form.label :occurred_on, "Paid on" %><br>
+    <%= form.date_field :occurred_on, value: @recurring_bill.next_due_on %>
+  </div>
+
+  <div>
+    <%= form.submit "Apply payment" %>
+  </div>
+<% end %>
+
+<p>
+  <%= link_to "Edit", edit_recurring_bill_path(@recurring_bill) %> |
+  <%= link_to "Back", recurring_bills_path %>
+</p>
+
+<%= button_to "Delete", @recurring_bill, method: :delete, data: { turbo_confirm: "Are you sure?" } %>

@@ -1,4 +1,4 @@
-<p style="color: green"><%= notice %></p>
+<p><%= notice %></p>
 
 <h1>Dashboard</h1>
 
@@ -27,6 +27,75 @@
   <li><strong>Total expenses:</strong> <%= number_to_currency(@expense_total) %></li>
   <li><strong>Net:</strong> <%= number_to_currency(@net_total) %></li>
 </ul>
+
+<h2>This month (<%= @forecast_start %> to <%= @forecast_end %>)</h2>
+
+<ul>
+  <li><strong>Expected income:</strong> <%= number_to_currency(@upcoming_income_total) %></li>
+  <li><strong>Expected bills:</strong> <%= number_to_currency(@upcoming_bill_total) %></li>
+</ul>
+
+<h3>Upcoming income</h3>
+
+<% if @upcoming_incomes.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Due</th>
+        <th>Name</th>
+        <th>Account</th>
+        <th>Category</th>
+        <th>Cadence</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @upcoming_incomes.each do |income| %>
+        <tr>
+          <td><%= income.next_due_on %></td>
+          <td><%= link_to income.name, income %></td>
+          <td><%= income.account.name %></td>
+          <td><%= income.category.name %></td>
+          <td><%= income.cadence.humanize %></td>
+          <td><%= number_to_currency(income.amount) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No recurring income due this month.</p>
+<% end %>
+
+<h3>Upcoming bills</h3>
+
+<% if @upcoming_bills.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Due</th>
+        <th>Name</th>
+        <th>Account</th>
+        <th>Category</th>
+        <th>Cadence</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @upcoming_bills.each do |bill| %>
+        <tr>
+          <td><%= bill.next_due_on %></td>
+          <td><%= link_to bill.name, bill %></td>
+          <td><%= bill.account.name %></td>
+          <td><%= bill.category.name %></td>
+          <td><%= bill.cadence.humanize %></td>
+          <td><%= number_to_currency(bill.amount) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No recurring bills due this month.</p>
+<% end %>
 
 <h2>Expenses by category</h2>
 

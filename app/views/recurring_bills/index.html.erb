@@ -1,0 +1,40 @@
+<p><%= notice %></p>
+
+<h1>Recurring bills</h1>
+
+<p>
+  <%= link_to "New recurring bill", new_recurring_bill_path %>
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Account</th>
+      <th>Apply to</th>
+      <th>Category</th>
+      <th>Cadence</th>
+      <th>Next date</th>
+      <th>Amount</th>
+      <th>Autopay</th>
+      <th>Active</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @recurring_bills.each do |recurring_bill| %>
+      <tr>
+        <td><%= recurring_bill.name %></td>
+        <td><%= recurring_bill.account.name %></td>
+        <td><%= recurring_bill.transfer_account&.name || "-" %></td>
+        <td><%= recurring_bill.category.name %></td>
+        <td><%= recurring_bill.cadence.humanize %></td>
+        <td><%= recurring_bill.next_due_on %></td>
+        <td><%= number_to_currency(recurring_bill.amount) %></td>
+        <td><%= recurring_bill.autopay? ? "Yes" : "No" %></td>
+        <td><%= recurring_bill.active? ? "Yes" : "No" %></td>
+        <td><%= link_to "Show", recurring_bill %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

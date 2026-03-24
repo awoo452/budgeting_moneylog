@@ -1,0 +1,56 @@
+<%= form_with(model: recurring_income) do |form| %>
+  <% if recurring_income.errors.any? %>
+    <div>
+      <h2><%= pluralize(recurring_income.errors.count, "error") %> prohibited this recurring income from being saved:</h2>
+      <ul>
+        <% recurring_income.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name %><br>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :amount %><br>
+    <%= form.number_field :amount, step: "0.01" %>
+  </div>
+
+  <div>
+    <%= form.label :cadence %><br>
+    <%= form.select :cadence, RecurringIncome::CADENCES.map { |value| [value.humanize, value] }, include_blank: true %>
+  </div>
+
+  <div>
+    <%= form.label :next_due_on, "Next expected date" %><br>
+    <%= form.date_field :next_due_on %>
+  </div>
+
+  <div>
+    <%= form.label :account_id, "Deposit account" %><br>
+    <%= form.collection_select :account_id, Account.order(:name), :id, :name, prompt: "Select account" %>
+  </div>
+
+  <div>
+    <%= form.label :category_id, "Income category" %><br>
+    <%= form.collection_select :category_id, Category.where(kind: "income").order(:name), :id, :name, prompt: "Select category" %>
+  </div>
+
+  <div>
+    <%= form.label :active %>
+    <%= form.check_box :active %>
+  </div>
+
+  <div>
+    <%= form.label :notes %><br>
+    <%= form.text_area :notes, rows: 4 %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

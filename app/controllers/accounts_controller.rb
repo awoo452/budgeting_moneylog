@@ -45,6 +45,9 @@ class AccountsController < ApplicationController
   end
 
   def account_params
-    params.require(:account).permit(:name, :institution, :account_type, :currency, :opening_balance, :current_balance, :opened_on, :notes)
+    params.require(:account).permit(:name, :institution, :account_type, :currency, :opening_balance, :current_balance,
+                                    :opened_on, :notes, :credit_limit, :interest_rate, :statement_day, :due_day,
+                                    :minimum_payment, :payment_amount, :payment_frequency, :original_principal,
+                                    :remaining_principal, :term_months, :promo_apr_end, :next_payment_due_on, :autopay)
   end
 end

@@ -29,6 +29,22 @@ class DashboardController < ApplicationController
       .sum(:amount)
       .map { |(id, name), total| { id: id, name: name, total: total } }
       .sort_by { |row| -row[:total] }
+
+    @forecast_start = Date.current.beginning_of_month
+    @forecast_end = (@forecast_start.next_month - 1.day)
+
+    @upcoming_incomes = RecurringIncome.active
+      .includes(:account, :category)
+      .where(next_due_on: @forecast_start..@forecast_end)
+      .order(:next_due_on, :name)
+
+    @upcoming_bills = RecurringBill.active
+      .includes(:account, :category)
+      .where(next_due_on: @forecast_start..@forecast_end)
+      .order(:next_due_on, :name)
+
+    @upcoming_income_total = @upcoming_incomes.sum(:amount)
+    @upcoming_bill_total = @upcoming_bills.sum(:amount)
   end
 
   private

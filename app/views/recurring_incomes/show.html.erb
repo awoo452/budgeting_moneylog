@@ -1,0 +1,50 @@
+<p><%= notice %></p>
+
+<h1>Recurring income</h1>
+
+<p>
+  <strong>Name:</strong>
+  <%= @recurring_income.name %>
+</p>
+
+<p>
+  <strong>Amount:</strong>
+  <%= number_to_currency(@recurring_income.amount) %>
+</p>
+
+<p>
+  <strong>Cadence:</strong>
+  <%= @recurring_income.cadence.humanize %>
+</p>
+
+<p>
+  <strong>Next expected date:</strong>
+  <%= @recurring_income.next_due_on %>
+</p>
+
+<p>
+  <strong>Account:</strong>
+  <%= @recurring_income.account.name %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @recurring_income.category.name %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @recurring_income.active? ? "Yes" : "No" %>
+</p>
+
+<p>
+  <strong>Notes:</strong>
+  <%= @recurring_income.notes %>
+</p>
+
+<p>
+  <%= link_to "Edit", edit_recurring_income_path(@recurring_income) %> |
+  <%= link_to "Back", recurring_incomes_path %>
+</p>
+
+<%= button_to "Delete", @recurring_income, method: :delete, data: { turbo_confirm: "Are you sure?" } %>

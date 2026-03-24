@@ -1,4 +1,4 @@
-<p style="color: green"><%= notice %></p>
+<p><%= notice %></p>
 
 <h1>Account</h1>
 
@@ -31,6 +31,76 @@
   <strong>Current balance:</strong>
   <%= number_to_currency(@account.current_balance) %>
 </p>
+
+<% if @account.account_type == "credit" || @account.credit_limit.present? || @account.interest_rate.present? ||
+      @account.minimum_payment.present? || @account.payment_amount.present? || @account.original_principal.present? %>
+  <h2>Debt details</h2>
+
+  <p>
+    <strong>Credit limit:</strong>
+    <%= @account.credit_limit ? number_to_currency(@account.credit_limit) : "-" %>
+  </p>
+
+  <p>
+    <strong>APR (%):</strong>
+    <%= @account.interest_rate || "-" %>
+  </p>
+
+  <p>
+    <strong>Statement day:</strong>
+    <%= @account.statement_day || "-" %>
+  </p>
+
+  <p>
+    <strong>Due day:</strong>
+    <%= @account.due_day || "-" %>
+  </p>
+
+  <p>
+    <strong>Next payment due:</strong>
+    <%= @account.next_payment_due_on || "-" %>
+  </p>
+
+  <p>
+    <strong>Minimum payment:</strong>
+    <%= @account.minimum_payment ? number_to_currency(@account.minimum_payment) : "-" %>
+  </p>
+
+  <p>
+    <strong>Planned payment amount:</strong>
+    <%= @account.payment_amount ? number_to_currency(@account.payment_amount) : "-" %>
+  </p>
+
+  <p>
+    <strong>Payment frequency:</strong>
+    <%= @account.payment_frequency&.humanize || "-" %>
+  </p>
+
+  <p>
+    <strong>Original principal:</strong>
+    <%= @account.original_principal ? number_to_currency(@account.original_principal) : "-" %>
+  </p>
+
+  <p>
+    <strong>Remaining principal:</strong>
+    <%= @account.remaining_principal ? number_to_currency(@account.remaining_principal) : "-" %>
+  </p>
+
+  <p>
+    <strong>Term (months):</strong>
+    <%= @account.term_months || "-" %>
+  </p>
+
+  <p>
+    <strong>Promo APR end:</strong>
+    <%= @account.promo_apr_end || "-" %>
+  </p>
+
+  <p>
+    <strong>Autopay enabled:</strong>
+    <%= @account.autopay? ? "Yes" : "No" %>
+  </p>
+<% end %>
 
 <p>
   <strong>Opened on:</strong>

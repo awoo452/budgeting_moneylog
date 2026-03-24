@@ -40,6 +40,73 @@
     <%= form.number_field :current_balance, step: "0.01" %>
   </div>
 
+  <h3>Debt details (credit/loan)</h3>
+
+  <div>
+    <%= form.label :credit_limit %><br>
+    <%= form.number_field :credit_limit, step: "0.01" %>
+  </div>
+
+  <div>
+    <%= form.label :interest_rate, "APR (%)" %><br>
+    <%= form.number_field :interest_rate, step: "0.01" %>
+  </div>
+
+  <div>
+    <%= form.label :statement_day, "Statement day (1-31)" %><br>
+    <%= form.number_field :statement_day, step: 1, min: 1, max: 31 %>
+  </div>
+
+  <div>
+    <%= form.label :due_day, "Due day (1-31)" %><br>
+    <%= form.number_field :due_day, step: 1, min: 1, max: 31 %>
+  </div>
+
+  <div>
+    <%= form.label :next_payment_due_on, "Next payment due" %><br>
+    <%= form.date_field :next_payment_due_on %>
+  </div>
+
+  <div>
+    <%= form.label :minimum_payment %><br>
+    <%= form.number_field :minimum_payment, step: "0.01" %>
+  </div>
+
+  <div>
+    <%= form.label :payment_amount, "Planned payment amount" %><br>
+    <%= form.number_field :payment_amount, step: "0.01" %>
+  </div>
+
+  <div>
+    <%= form.label :payment_frequency %><br>
+    <%= form.select :payment_frequency, Account::PAYMENT_FREQUENCIES.map { |value| [value.humanize, value] }, include_blank: true %>
+  </div>
+
+  <div>
+    <%= form.label :original_principal %><br>
+    <%= form.number_field :original_principal, step: "0.01" %>
+  </div>
+
+  <div>
+    <%= form.label :remaining_principal %><br>
+    <%= form.number_field :remaining_principal, step: "0.01" %>
+  </div>
+
+  <div>
+    <%= form.label :term_months, "Term (months)" %><br>
+    <%= form.number_field :term_months, step: 1, min: 1 %>
+  </div>
+
+  <div>
+    <%= form.label :promo_apr_end, "Promo APR end" %><br>
+    <%= form.date_field :promo_apr_end %>
+  </div>
+
+  <div>
+    <%= form.label :autopay, "Autopay enabled" %>
+    <%= form.check_box :autopay %>
+  </div>
+
   <div>
     <%= form.label :opened_on %><br>
     <%= form.date_field :opened_on %>

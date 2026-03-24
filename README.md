@@ -11,6 +11,8 @@ This repo is a basic budgeting template with CRUD flows for accounts, categories
 - CSV import for transactions (date, description, debit, credit) with account selection.
 - Budgets for monthly category targets.
 - Dashboard with basic income/expense summaries and category totals (click a category to see its transactions).
+- Recurring income and bill schedules for upcoming cashflow.
+- Debt details for credit/loan accounts (APR, due dates, minimum payments).
 
 ## Core Schema
 
@@ -24,6 +26,20 @@ Optional fields:
 - `institution`
 - `account_type`
 - `opened_on`
+- `current_balance`
+- `credit_limit`
+- `interest_rate`
+- `statement_day`
+- `due_day`
+- `next_payment_due_on`
+- `minimum_payment`
+- `payment_amount`
+- `payment_frequency`
+- `original_principal`
+- `remaining_principal`
+- `term_months`
+- `promo_apr_end`
+- `autopay`
 - `notes`
 
 ### Category
@@ -55,6 +71,41 @@ Required fields:
 
 Optional fields:
 - `notes`
+
+### Recurring income
+Required fields:
+- `name`
+- `amount`
+- `cadence`
+- `next_due_on`
+- `account_id`
+- `category_id`
+
+Optional fields:
+- `active`
+- `notes`
+
+### Recurring bill
+Required fields:
+- `name`
+- `amount`
+- `cadence`
+- `next_due_on`
+- `account_id`
+- `category_id`
+
+Optional fields:
+- `due_day`
+- `last_paid_on`
+- `autopay`
+- `variable_amount`
+- `transfer_account_id`
+- `active`
+- `notes`
+
+Notes:
+- Recurring bills can use expense or transfer categories (for loan or card payments).
+- Applying a recurring bill creates a transaction and, if `transfer_account_id` is set, applies a matching transfer to the related account.
 
 ## CSV Import
 

@@ -3,9 +3,28 @@ class BudgetsController < ApplicationController
 
   def index
     @month = parse_month(params[:month]) || Date.current.beginning_of_month
+    @month_start = @month.beginning_of_month
+    @month_end = @month.end_of_month
+
     @budgets = Budget.includes(:category).where(month: @month).order(:category_id)
     @actuals_by_category = actuals_by_category(@month)
     @suggested_budgets = suggested_budgets(@month)
+
+    bill_scope = RecurringBill.active.where(next_due_on: @month_start..@month_end)
+    income_scope = RecurringIncome.active.where(next_due_on: @month_start..@month_end)
+
+    @recurring_bills = bill_scope.includes(:account, :category).order(:next_due_on, :name)
+    @recurring_incomes = income_scope.includes(:account, :category).order(:next_due_on, :name)
+
+    @expected_income_total = income_scope.sum(:amount)
+    @expected_bill_total = bill_scope.sum(:amount)
+    @expected_net_total = @expected_income_total - @expected_bill_total
+
+    @scheduled_bills_by_category = bill_scope.group(:category_id).sum(:amount)
+    budgeted_category_ids = @budgets.map(&:category_id)
+    @unbudgeted_scheduled_bills = @scheduled_bills_by_category.reject { |category_id, _| budgeted_category_ids.include?(category_id) }
+    unbudgeted_ids = @unbudgeted_scheduled_bills.keys
+    @unbudgeted_bill_categories = Category.where(id: unbudgeted_ids).index_by(&:id)
   end
 
   def show
@@ -72,7 +91,13 @@ class BudgetsController < ApplicationController
   def parse_month(value)
     return nil if value.blank?
 
-    Date.parse(value).beginning_of_month
+    raw = value.to_s.strip
+    if raw.match?(/\A\d{4}-\d{2}\z/)
+      year, month = raw.split("-").map(&:to_i)
+      return Date.new(year, month, 1)
+    end
+
+    Date.parse(raw).beginning_of_month
   rescue ArgumentError
     nil
   end

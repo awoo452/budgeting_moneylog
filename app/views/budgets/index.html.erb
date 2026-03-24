@@ -1,4 +1,4 @@
-<p style="color: green"><%= notice %></p>
+<p><%= notice %></p>
 
 <h1>Budgets</h1>
 
@@ -17,30 +17,171 @@
   <%= link_to "New budget", new_budget_path %>
 </p>
 
+<h2>This month (<%= @month_start %> to <%= @month_end %>)</h2>
+
+<ul>
+  <li><strong>Expected income:</strong> <%= number_to_currency(@expected_income_total) %></li>
+  <li><strong>Expected bills:</strong> <%= number_to_currency(@expected_bill_total) %></li>
+  <li><strong>Expected net:</strong> <%= number_to_currency(@expected_net_total) %></li>
+</ul>
+
+<h3>Recurring income due this month</h3>
+
+<% if @recurring_incomes.any? %>
+  <% recurring_income_total = @recurring_incomes.sum(&:amount) %>
+  <table>
+    <thead>
+      <tr>
+        <th>Due</th>
+        <th>Name</th>
+        <th>Account</th>
+        <th>Category</th>
+        <th>Cadence</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @recurring_incomes.each do |income| %>
+        <tr>
+          <td><%= income.next_due_on %></td>
+          <td><%= link_to income.name, income %></td>
+          <td><%= income.account.name %></td>
+          <td><%= income.category.name %></td>
+          <td><%= income.cadence.humanize %></td>
+          <td><%= number_to_currency(income.amount) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th colspan="5">Total</th>
+        <th><%= number_to_currency(recurring_income_total) %></th>
+      </tr>
+    </tfoot>
+  </table>
+<% else %>
+  <p>No recurring income due this month.</p>
+<% end %>
+
+<h3>Recurring bills due this month</h3>
+
+<% if @recurring_bills.any? %>
+  <% recurring_bill_total = @recurring_bills.sum(&:amount) %>
+  <table>
+    <thead>
+      <tr>
+        <th>Due</th>
+        <th>Name</th>
+        <th>Account</th>
+        <th>Category</th>
+        <th>Cadence</th>
+        <th>Amount</th>
+        <th>Autopay</th>
+        <th>Variable</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @recurring_bills.each do |bill| %>
+        <tr>
+          <td><%= bill.next_due_on %></td>
+          <td><%= link_to bill.name, bill %></td>
+          <td><%= bill.account.name %></td>
+          <td><%= bill.category.name %></td>
+          <td><%= bill.cadence.humanize %></td>
+          <td><%= number_to_currency(bill.amount) %></td>
+          <td><%= bill.autopay? ? "Yes" : "No" %></td>
+          <td><%= bill.variable_amount? ? "Yes" : "No" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th colspan="5">Total</th>
+        <th><%= number_to_currency(recurring_bill_total) %></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </tfoot>
+  </table>
+<% else %>
+  <p>No recurring bills due this month.</p>
+<% end %>
+
+<% budgeted_total = @budgets.sum(&:amount) %>
+<% actual_total = @actuals_by_category.values.sum %>
+<% scheduled_total = @scheduled_bills_by_category.values.sum %>
+<% remaining_total = budgeted_total - actual_total %>
+<% projected_remaining_total = budgeted_total - actual_total - scheduled_total %>
+
 <table>
   <thead>
     <tr>
       <th>Category</th>
       <th>Budgeted</th>
       <th>Actual</th>
+      <th>Scheduled bills</th>
       <th>Remaining</th>
+      <th>Projected remaining</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <% @budgets.each do |budget| %>
       <% actual = @actuals_by_category[budget.category_id] || 0 %>
+      <% scheduled = @scheduled_bills_by_category[budget.category_id] || 0 %>
       <% remaining = budget.amount - actual %>
+      <% projected_remaining = budget.amount - actual - scheduled %>
       <tr>
         <td><%= budget.category&.name %></td>
         <td><%= number_to_currency(budget.amount) %></td>
         <td><%= number_to_currency(actual) %></td>
+        <td><%= number_to_currency(scheduled) %></td>
         <td><%= number_to_currency(remaining) %></td>
+        <td><%= number_to_currency(projected_remaining) %></td>
         <td><%= link_to "Show", budget %></td>
       </tr>
     <% end %>
   </tbody>
+  <tfoot>
+    <tr>
+      <th>Total</th>
+      <th><%= number_to_currency(budgeted_total) %></th>
+      <th><%= number_to_currency(actual_total) %></th>
+      <th><%= number_to_currency(scheduled_total) %></th>
+      <th><%= number_to_currency(remaining_total) %></th>
+      <th><%= number_to_currency(projected_remaining_total) %></th>
+      <th></th>
+    </tr>
+  </tfoot>
 </table>
+
+<% if @unbudgeted_scheduled_bills.any? %>
+  <h3>Scheduled bills without a budget</h3>
+
+  <% unbudgeted_total = @unbudgeted_scheduled_bills.values.sum %>
+  <table>
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Scheduled</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @unbudgeted_scheduled_bills.each do |category_id, amount| %>
+        <tr>
+          <td><%= @unbudgeted_bill_categories[category_id]&.name || "Unknown" %></td>
+          <td><%= number_to_currency(amount) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>Total</th>
+        <th><%= number_to_currency(unbudgeted_total) %></th>
+      </tr>
+    </tfoot>
+  </table>
+<% end %>
 
 <h2>Suggested Budgets (Last 3 Months Avg)</h2>
 
@@ -49,6 +190,7 @@
   <%= form.submit "Generate Budgets For This Month" %>
 <% end %>
 
+<% suggested_total = @suggested_budgets.sum { |suggestion| suggestion[:amount] } %>
 <table>
   <thead>
     <tr>
@@ -64,4 +206,10 @@
       </tr>
     <% end %>
   </tbody>
+  <tfoot>
+    <tr>
+      <th>Total</th>
+      <th><%= number_to_currency(suggested_total) %></th>
+    </tr>
+  </tfoot>
 </table>

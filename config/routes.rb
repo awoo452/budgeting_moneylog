@@ -13,6 +13,12 @@ Rails.application.routes.draw do
 
   resources :accounts
   resources :categories
+  resources :recurring_incomes
+  resources :recurring_bills do
+    member do
+      post :apply_payment
+    end
+  end
   resources :transactions do
     collection do
       get :import

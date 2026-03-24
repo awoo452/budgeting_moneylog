@@ -1,0 +1,36 @@
+<p><%= notice %></p>
+
+<h1>Recurring income</h1>
+
+<p>
+  <%= link_to "New recurring income", new_recurring_income_path %>
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Account</th>
+      <th>Category</th>
+      <th>Cadence</th>
+      <th>Next date</th>
+      <th>Amount</th>
+      <th>Active</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @recurring_incomes.each do |recurring_income| %>
+      <tr>
+        <td><%= recurring_income.name %></td>
+        <td><%= recurring_income.account.name %></td>
+        <td><%= recurring_income.category.name %></td>
+        <td><%= recurring_income.cadence.humanize %></td>
+        <td><%= recurring_income.next_due_on %></td>
+        <td><%= number_to_currency(recurring_income.amount) %></td>
+        <td><%= recurring_income.active? ? "Yes" : "No" %></td>
+        <td><%= link_to "Show", recurring_income %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
