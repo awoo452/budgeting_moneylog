@@ -27,7 +27,8 @@ Rails.application.routes.draw do
   end
   resources :budgets do
     collection do
-      post :generate
+      get :build
+      patch :build, action: :save_build, as: :save_build
     end
   end
 

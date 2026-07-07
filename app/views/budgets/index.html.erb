@@ -14,7 +14,9 @@
 <% end %>
 
 <p>
-  <%= link_to "New budget", new_budget_path %>
+  <%= link_to "Build Your Budget for #{@month.strftime('%B %Y')}", build_budgets_path(month: @month.strftime("%Y-%m")) %>
+  &middot;
+  <%= link_to "Add one category", new_budget_path %>
 </p>
 
 <h2>This month (<%= @month_start %> to <%= @month_end %>)</h2>
@@ -27,8 +29,7 @@
 
 <h3>Recurring income due this month</h3>
 
-<% if @recurring_incomes.any? %>
-  <% recurring_income_total = @recurring_incomes.sum(&:amount) %>
+<% if @recurring_income_occurrences.any? %>
   <table>
     <thead>
       <tr>
@@ -41,21 +42,22 @@
       </tr>
     </thead>
     <tbody>
-      <% @recurring_incomes.each do |income| %>
+      <% @recurring_income_occurrences.each do |occurrence| %>
+        <% income = occurrence[:record] %>
         <tr>
-          <td><%= income.next_due_on %></td>
+          <td><%= occurrence[:date] %></td>
           <td><%= link_to income.name, income %></td>
           <td><%= income.account.name %></td>
           <td><%= income.category.name %></td>
           <td><%= income.cadence.humanize %></td>
-          <td><%= number_to_currency(income.amount) %></td>
+          <td><%= number_to_currency(occurrence[:amount]) %></td>
         </tr>
       <% end %>
     </tbody>
     <tfoot>
       <tr>
         <th colspan="5">Total</th>
-        <th><%= number_to_currency(recurring_income_total) %></th>
+        <th><%= number_to_currency(@expected_income_total) %></th>
       </tr>
     </tfoot>
   </table>
@@ -65,8 +67,7 @@
 
 <h3>Recurring bills due this month</h3>
 
-<% if @recurring_bills.any? %>
-  <% recurring_bill_total = @recurring_bills.sum(&:amount) %>
+<% if @recurring_bill_occurrences.any? %>
   <table>
     <thead>
       <tr>
@@ -81,14 +82,15 @@
       </tr>
     </thead>
     <tbody>
-      <% @recurring_bills.each do |bill| %>
+      <% @recurring_bill_occurrences.each do |occurrence| %>
+        <% bill = occurrence[:record] %>
         <tr>
-          <td><%= bill.next_due_on %></td>
+          <td><%= occurrence[:date] %></td>
           <td><%= link_to bill.name, bill %></td>
           <td><%= bill.account.name %></td>
           <td><%= bill.category.name %></td>
           <td><%= bill.cadence.humanize %></td>
-          <td><%= number_to_currency(bill.amount) %></td>
+          <td><%= number_to_currency(occurrence[:amount]) %></td>
           <td><%= bill.autopay? ? "Yes" : "No" %></td>
           <td><%= bill.variable_amount? ? "Yes" : "No" %></td>
         </tr>
@@ -97,7 +99,7 @@
     <tfoot>
       <tr>
         <th colspan="5">Total</th>
-        <th><%= number_to_currency(recurring_bill_total) %></th>
+        <th><%= number_to_currency(@expected_bill_total) %></th>
         <th></th>
         <th></th>
       </tr>
@@ -182,34 +184,3 @@
     </tfoot>
   </table>
 <% end %>
-
-<h2>Suggested Budgets (Last 3 Months Avg)</h2>
-
-<%= form_with url: generate_budgets_path, method: :post do |form| %>
-  <%= form.hidden_field :month, value: @month %>
-  <%= form.submit "Generate Budgets For This Month" %>
-<% end %>
-
-<% suggested_total = @suggested_budgets.sum { |suggestion| suggestion[:amount] } %>
-<table>
-  <thead>
-    <tr>
-      <th>Category</th>
-      <th>Suggested</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @suggested_budgets.each do |suggestion| %>
-      <tr>
-        <td><%= suggestion[:category_name] %></td>
-        <td><%= number_to_currency(suggestion[:amount]) %></td>
-      </tr>
-    <% end %>
-  </tbody>
-  <tfoot>
-    <tr>
-      <th>Total</th>
-      <th><%= number_to_currency(suggested_total) %></th>
-    </tr>
-  </tfoot>
-</table>

@@ -37,7 +37,7 @@
 
 <h3>Upcoming income</h3>
 
-<% if @upcoming_incomes.any? %>
+<% if @upcoming_income_occurrences.any? %>
   <table>
     <thead>
       <tr>
@@ -50,14 +50,15 @@
       </tr>
     </thead>
     <tbody>
-      <% @upcoming_incomes.each do |income| %>
+      <% @upcoming_income_occurrences.each do |occurrence| %>
+        <% income = occurrence[:record] %>
         <tr>
-          <td><%= income.next_due_on %></td>
+          <td><%= occurrence[:date] %></td>
           <td><%= link_to income.name, income %></td>
           <td><%= income.account.name %></td>
           <td><%= income.category.name %></td>
           <td><%= income.cadence.humanize %></td>
-          <td><%= number_to_currency(income.amount) %></td>
+          <td><%= number_to_currency(occurrence[:amount]) %></td>
         </tr>
       <% end %>
     </tbody>
@@ -68,7 +69,7 @@
 
 <h3>Upcoming bills</h3>
 
-<% if @upcoming_bills.any? %>
+<% if @upcoming_bill_occurrences.any? %>
   <table>
     <thead>
       <tr>
@@ -81,14 +82,15 @@
       </tr>
     </thead>
     <tbody>
-      <% @upcoming_bills.each do |bill| %>
+      <% @upcoming_bill_occurrences.each do |occurrence| %>
+        <% bill = occurrence[:record] %>
         <tr>
-          <td><%= bill.next_due_on %></td>
+          <td><%= occurrence[:date] %></td>
           <td><%= link_to bill.name, bill %></td>
           <td><%= bill.account.name %></td>
           <td><%= bill.category.name %></td>
           <td><%= bill.cadence.humanize %></td>
-          <td><%= number_to_currency(bill.amount) %></td>
+          <td><%= number_to_currency(occurrence[:amount]) %></td>
         </tr>
       <% end %>
     </tbody>

@@ -1,4 +1,6 @@
 class DashboardController < ApplicationController
+  include RecurringOccurrences
+
   def index
     @start_date = parse_date_param(params[:start_date])
     @end_date = parse_date_param(params[:end_date])
@@ -33,18 +35,15 @@ class DashboardController < ApplicationController
     @forecast_start = Date.current.beginning_of_month
     @forecast_end = (@forecast_start.next_month - 1.day)
 
-    @upcoming_incomes = RecurringIncome.active
-      .includes(:account, :category)
-      .where(next_due_on: @forecast_start..@forecast_end)
-      .order(:next_due_on, :name)
+    @upcoming_income_occurrences = occurrences_for(
+      RecurringIncome.active.includes(:account, :category), @forecast_start, @forecast_end
+    )
+    @upcoming_bill_occurrences = occurrences_for(
+      RecurringBill.active.includes(:account, :category), @forecast_start, @forecast_end
+    )
 
-    @upcoming_bills = RecurringBill.active
-      .includes(:account, :category)
-      .where(next_due_on: @forecast_start..@forecast_end)
-      .order(:next_due_on, :name)
-
-    @upcoming_income_total = @upcoming_incomes.sum(:amount)
-    @upcoming_bill_total = @upcoming_bills.sum(:amount)
+    @upcoming_income_total = @upcoming_income_occurrences.sum { |o| o[:amount] }
+    @upcoming_bill_total = @upcoming_bill_occurrences.sum { |o| o[:amount] }
   end
 
   private

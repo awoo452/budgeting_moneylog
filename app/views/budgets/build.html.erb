@@ -1,0 +1,60 @@
+<p><%= notice %></p>
+
+<h1>Build Your Budget — <%= @month.strftime("%B %Y") %></h1>
+
+<p>
+  Every expense category is listed below. "Recent avg" is what you've actually
+  spent per month recently (blank means no history yet — just pick a number).
+  "Scheduled" is what's already set up to bill against that category this
+  month via recurring bills. Type in what you want to budget for each one and
+  save — leave a box empty to skip that category.
+</p>
+
+<%= form_with url: save_build_budgets_path, method: :patch do |form| %>
+  <%= form.hidden_field :month, value: @month.strftime("%Y-%m") %>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Recent avg</th>
+        <th>Scheduled</th>
+        <th>Budget amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @rows.each do |row| %>
+        <tr>
+          <td><%= row[:category_name] %></td>
+          <td>
+            <% if row[:months_of_data].positive? %>
+              <%= number_to_currency(row[:amount]) %>
+            <% else %>
+              No history yet
+            <% end %>
+          </td>
+          <td>
+            <% if row[:scheduled_amount].positive? %>
+              <%= number_to_currency(row[:scheduled_amount]) %>
+            <% else %>
+              &mdash;
+            <% end %>
+          </td>
+          <td>
+            <%= number_field_tag "amounts[#{row[:category_id]}]",
+                  row[:current_amount] || (row[:amount].positive? ? row[:amount] : nil),
+                  step: "0.01", min: "0", placeholder: "0.00" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @rows.empty? %>
+    <p>You don't have any expense categories yet. <%= link_to "Add one", new_category_path %> first.</p>
+  <% else %>
+    <%= form.submit "Save Budget for #{@month.strftime('%B %Y')}" %>
+  <% end %>
+<% end %>
+
+<p><%= link_to "← Back to Budgets", budgets_path(month: @month.strftime("%Y-%m")) %></p>

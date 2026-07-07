@@ -12,17 +12,17 @@
 
   <div>
     <%= form.label :category_id, "Category" %><br>
-    <%= form.collection_select :category_id, Category.order(:name), :id, :name, prompt: "Select category" %>
+    <%= form.collection_select :category_id, Category.where(kind: "expense").order(:name), :id, :name, prompt: "Select category" %>
   </div>
 
   <div>
     <%= form.label :month %><br>
-    <%= form.date_field :month %>
+    <%= form.month_field :month, value: budget.month %>
   </div>
 
   <div>
     <%= form.label :amount %><br>
-    <%= form.number_field :amount, step: "0.01" %>
+    <%= form.number_field :amount, step: "0.01", min: "0.01" %>
   </div>
 
   <div>
