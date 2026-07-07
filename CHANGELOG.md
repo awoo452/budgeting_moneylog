@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.10] - 2026-07-06
+### Fixed
+- CI's Brakeman check failed with "not the latest version" (`bin/brakeman` passes `--ensure-latest`) — not a security finding, just an outdated gem. Updated `brakeman` from 8.0.4 to 8.0.5.
+
 ## [0.0.9] - 2026-07-06
 ### Added
 - "Build Your Budget" (`/budgets/build`): a single screen listing every expense category with its recent average spend, anything already scheduled to bill against it this month, and an editable amount box — save all of them in one submission instead of creating budgets one at a time. Replaces the old blind "Generate Budgets" button (which silently overwrote existing budgets with no preview) and the read-only suggestions table.
