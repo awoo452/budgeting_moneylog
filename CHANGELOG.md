@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.11] - 2026-09-11
+### Added
+- `CLAUDE.md`: points agents at the Rails Playbook, lists the rules broken most often, and says which of the playbook's `hosting/` notes apply here.
+- `AGENTS.md`: sends Codex and other agents to `CLAUDE.md`.
+
 ## [0.0.10] - 2026-07-06
 ### Fixed
 - CI's Brakeman check failed with "not the latest version" (`bin/brakeman` passes `--ensure-latest`) — not a security finding, just an outdated gem. Updated `brakeman` from 8.0.4 to 8.0.5.
